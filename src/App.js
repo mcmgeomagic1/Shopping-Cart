@@ -1,25 +1,68 @@
-import logo from './logo.svg';
-import './App.css';
+import GlobalStyles from './Styled/Global.js'
+import { Row } from './Styled/Row.styled.js'
+import {CartSection} from "./Styled/CartSection.styled.js"
+import { ThemeProvider } from 'styled-components' 
+import  React, {useState, useEffect} from 'react'
 
-function App() {
+import Header from './Components/Header/Header.js'
+import Product from './Components/Product/Product.js'
+import Cart from  './Components/Cart/Cart.js'
+
+export default function App() {
+  const theme = {
+      mobile: '768px',
+      tablet: '1394px',
+      smallerDevices: '477px'
+  }
+
+  const [procduts, setProducts] = useState([])
+  const [cartProducts, setCartProducts] = useState([])
+  const [root, changeRoot] = useState("home")
+  console.log("root ", root)
+
+  useEffect(()=> {
+      fetch('http://localhost:3000/items')
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+  },[])
+
+  const onAddToCard = (productID, productName, productPrice, productImage) => {
+    function addProduct () {
+        const NewCartProducts = cartProducts.concat({id: productID, name: productName, price: productPrice, imageUrl: productImage})
+        setCartProducts(NewCartProducts)
+    }
+    addProduct()
+  } 
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <ThemeProvider theme={theme}>
+        <>
+            <GlobalStyles />
+            <Header changeRoot={changeRoot} cartProducts={cartProducts}/>
+            <Row>
+              {
+                root == 'home' ?
+                  <section> 
+                    {
+                      procduts.map( product => ( 
+                                       
+                          <Product 
+                            key={product.id}
+                            product={product}
+                            onAddToCard={onAddToCard}
+                          />
+                      ))
+                    }
+                  </section>
+                : root == "cart"?
+                  <CartSection>
+                    <Cart cartProducts={cartProducts} changeRoot={changeRoot} onAddToCard={onAddToCard}/>
+                  </CartSection>
+                : <h1>dsdsdsd</h1>
+              }                             
+            </Row>
+        </>
+      </ThemeProvider>
   );
 }
 
-export default App;
