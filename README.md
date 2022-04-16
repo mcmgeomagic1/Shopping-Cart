@@ -13,6 +13,7 @@ This is a simple and basic shopping cart web App which basically can list all th
 ---
 
 ### Instalation
+* rename the file "env" to ".env"
 ```Bash
   npm install
   npm start
