@@ -8,6 +8,8 @@ import Header from './Components/Header/Header.js'
 import Product from './Components/Product/Product.js'
 import Cart from  './Components/Cart/Cart.js'
 
+const apiUrl = 'https://api.npoint.io/94fc4a0107a3eb588fd1'
+
 export default function App() {
   const theme = {
       mobile: '768px',
@@ -21,7 +23,7 @@ export default function App() {
   console.log("root ", root)
 
   useEffect(()=> {
-      fetch('http://localhost:3000/items')
+      fetch(`${apiUrl}/items`)
       .then((res) => res.json())
       .then((data) => setProducts(data))
   },[])
